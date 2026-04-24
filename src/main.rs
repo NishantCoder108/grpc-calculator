@@ -7,9 +7,22 @@ mod proto {
         tonic::include_file_descriptor_set!("calculator_descriptor");
 }
 
-#[derive(Debug, Default)]
-struct CalculatorService {}
+type State = std::sync::Arc<tokio::sync::RwLock<u64>>;
 
+#[derive(Debug, Default)]
+struct CalculatorService {
+    state: State,
+}
+
+impl CalculatorService {
+    async fn increment_counter(&self) {
+        let mut count = self.state.write().await;
+
+        *count += 1;
+
+        println!("Request count: {}", *count);
+    }
+}
 #[tonic::async_trait]
 impl Calculator for CalculatorService {
     async fn add(
@@ -18,6 +31,7 @@ impl Calculator for CalculatorService {
     ) -> Result<tonic::Response<proto::CalculatorResponse>, tonic::Status> {
         println!("got a request : {:?}", request);
 
+        self.increment_counter().await;
         let input = request.get_ref();
 
         let response = proto::CalculatorResponse {
@@ -31,6 +45,8 @@ impl Calculator for CalculatorService {
         &self,
         request: tonic::Request<proto::CalculatorRequest>,
     ) -> Result<tonic::Response<proto::CalculatorResponse>, tonic::Status> {
+        self.increment_counter().await;
+
         let input = request.get_ref();
 
         if input.b == 0 {

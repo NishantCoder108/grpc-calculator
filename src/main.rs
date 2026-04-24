@@ -26,6 +26,22 @@ impl Calculator for CalculatorService {
 
         Ok(tonic::Response::new(response))
     }
+
+    async fn divide(
+        &self,
+        request: tonic::Request<proto::CalculatorRequest>,
+    ) -> Result<tonic::Response<proto::CalculatorResponse>, tonic::Status> {
+        let input = request.get_ref();
+
+        if input.b == 0 {
+            return Err(tonic::Status::invalid_argument("Can't divide by 0"));
+        }
+        let response = proto::CalculatorResponse {
+            result: input.a / input.b,
+        };
+
+        Ok(tonic::Response::new(response))
+    }
 }
 
 #[tokio::main]

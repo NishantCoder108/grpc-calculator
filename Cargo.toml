@@ -11,6 +11,7 @@ tonic-reflection = "0.14"
 tonic-web = "0.14"
 tower-http = { version = "0.6", features = ["cors"] }
 tonic-prost = "0.14.5"
+http = "1.4.0"
 
 [build-dependencies]
 tonic-prost-build = "0.14"

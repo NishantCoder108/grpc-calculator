@@ -1,7 +1,7 @@
+use http::{HeaderValue, Method};
 use proto::admin_server::{Admin, AdminServer};
 use proto::calculator_server::{Calculator, CalculatorServer};
 use tonic::transport::Server;
-
 mod proto {
     tonic::include_proto!("calculator");
 
@@ -111,6 +111,7 @@ impl Admin for AdminService {
 use tonic::metadata::MetadataValue;
 use tonic::{Request, Status};
 use tonic_web::GrpcWebLayer;
+use tower_http::cors::{Any, CorsLayer};
 
 fn check_auth(req: Request<()>) -> Result<Request<()>, Status> {
     let token: MetadataValue<_> = "Bearer some-secret-token".parse().unwrap();
@@ -139,6 +140,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Server::builder()
         .accept_http1(true)
         // .layer(tower_http::cors::CorsLayer::permissive())
+        // .layer(
+        //     CorsLayer::new()
+        //         .allow_origin(Any)
+        //         .allow_methods(Any)
+        //         .allow_headers(Any),
+        // )
+        .layer(
+            CorsLayer::new()
+                .allow_origin(HeaderValue::from_static("http://localhost:5173"))
+                .allow_methods(Method::POST)
+                .allow_headers(Any),
+        )
         .layer(GrpcWebLayer::new())
         .add_service(service)
         // .add_service(tonic_web::enable(CalculatorServer::new(calc)))

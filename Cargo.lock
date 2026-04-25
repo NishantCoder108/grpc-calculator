@@ -203,6 +203,7 @@ dependencies = [
 name = "grpc-calculator"
 version = "0.1.0"
 dependencies = [
+ "http",
  "prost",
  "tokio",
  "tonic",

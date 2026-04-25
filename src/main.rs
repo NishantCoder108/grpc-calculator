@@ -1,4 +1,4 @@
-use http::{HeaderValue, Method};
+use http::{HeaderName, HeaderValue, Method};
 use proto::admin_server::{Admin, AdminServer};
 use proto::calculator_server::{Calculator, CalculatorServer};
 use tonic::transport::Server;
@@ -143,7 +143,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             CorsLayer::new()
                 .allow_origin(HeaderValue::from_static("http://localhost:5173"))
                 .allow_methods(Method::POST)
-                .allow_headers(Any),
+                .allow_headers(Any)
+                .expose_headers([
+                    HeaderName::from_static("grpc-status"),
+                    HeaderName::from_static("grpc-message"),
+                    HeaderName::from_static("grpc-status-details-bin"),
+                ]),
         )
         .layer(GrpcWebLayer::new())
         .add_service(service)

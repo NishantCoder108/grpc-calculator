@@ -7,3 +7,13 @@
   - We can just use with the help of `tonic-reflection = "0.11"`. We can use directly url.
 7. Interceptor : It act as middleware
 8. tower: more powerful middleware
+
+
+
+
+//For generating protos file in ts
+    npx protoc --ts_out .    --ts_opt long_type_string   --ts_opt optimize_code_size --proto_path protos protos/my.proto
+
+    npx protoc --ts_out .    --ts_opt long_type_string   --ts_opt optimize_code_size --proto_path protos protos/calculator.proto
+  
+ 

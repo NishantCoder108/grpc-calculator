@@ -3,7 +3,7 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
-import { CalculatorClient } from "./calculator.client.ts";
+import { CalculatorClient } from "./generated/calculator.client.ts";
 
 function App() {
   const [num1, setNum1] = useState(0);

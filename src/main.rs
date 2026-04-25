@@ -110,6 +110,7 @@ impl Admin for AdminService {
 
 use tonic::metadata::MetadataValue;
 use tonic::{Request, Status};
+use tonic_web::GrpcWebLayer;
 
 fn check_auth(req: Request<()>) -> Result<Request<()>, Status> {
     let token: MetadataValue<_> = "Bearer some-secret-token".parse().unwrap();
@@ -133,13 +134,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let service = tonic_reflection::server::Builder::configure()
         .register_encoded_file_descriptor_set(proto::FILE_DESCRIPTOR_SET)
-        .build()?;
+        .build_v1()?;
 
     Server::builder()
         .accept_http1(true)
-        .layer(tower_http::cors::CorsLayer::permissive())
+        // .layer(tower_http::cors::CorsLayer::permissive())
+        .layer(GrpcWebLayer::new())
         .add_service(service)
-        .add_service(tonic_web::enable(CalculatorServer::new(calc)))
+        // .add_service(tonic_web::enable(CalculatorServer::new(calc)))
+        .add_service(CalculatorServer::new(calc))
         // .add_service(AdminServer::new(admin))
         .add_service(AdminServer::with_interceptor(admin, check_auth))
         .serve(addr)

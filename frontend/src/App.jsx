@@ -24,10 +24,34 @@ function App() {
   };
 
   const handleMultiply = () => {
-    client.multiply({a:num1, b:num2}).then((response) => {
+    client.multiply({ a: num1, b: num2 }).then((response) => {
       setResult(parseInt(response.response.result));
-    })
-  }
+    });
+  };
+
+  const handleSub = () => {
+    client
+      .subtract({ a: num1, b: num2 })
+      .then((res) => setResult(res.response.result));
+  };
+
+  const handleDivide = async () => {
+    try {
+      const res = await client.divide({ a: num1, b: num2 });
+      console.log(res.response.result);
+      setResult(res.response.result);
+    } catch (err) {
+      console.error("Division failed:", err);
+      // setResult(err.message || "Error");
+
+      const rawMessage = err.message || "Unknown Error";
+      const cleanMessage = decodeURIComponent(rawMessage);
+
+      console.error("Decoded Error:", cleanMessage);
+      setResult(cleanMessage);
+    }
+  };
+
   return (
     <>
       <h1 className="text-6xl font-extrabold background bg-gradient-to-r from-red-300 to-blue-300 text-transparent bg-clip-text py-2">
@@ -63,6 +87,22 @@ function App() {
             className="rounded bg-indigo-500 px-2 py-2 text-3xl font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
           >
             Multiply
+          </button>
+
+          <button
+            type="button"
+            onClick={handleSub}
+            className="rounded bg-indigo-500 px-2 py-2 text-3xl font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+          >
+            Subtract
+          </button>
+
+          <button
+            type="button"
+            onClick={handleDivide}
+            className="rounded bg-indigo-500 px-2 py-2 text-3xl font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+          >
+            Divide
           </button>
         </div>
       </div>

@@ -6,6 +6,7 @@ service Calculator {
     rpc Add(CalculatorRequest) returns (CalculatorResponse);
     rpc Divide(CalculatorRequest) returns (CalculatorResponse);
     rpc Subtract(CalculatorRequest) returns (CalculatorResponse);
+    rpc Multiply(CalculatorRequest) returns(CalculatorResponse);
 }
 
 

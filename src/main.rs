@@ -60,6 +60,20 @@ impl Calculator for CalculatorService {
 
         Ok(tonic::Response::new(response))
     }
+
+    async fn subtract(
+        &self,
+        request: tonic::Request<proto::CalculatorRequest>,
+    ) -> Result<tonic::Response<proto::CalculatorResponse>, tonic::Status> {
+        self.increment_counter().await;
+
+        let input = request.get_ref();
+
+        let response = proto::CalculatorResponse {
+            result: input.a - input.b,
+        };
+        Ok(tonic::Response::new(response))
+    }
 }
 
 #[derive(Default, Debug)]

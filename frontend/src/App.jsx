@@ -23,6 +23,11 @@ function App() {
     });
   };
 
+  const handleMultiply = () => {
+    client.multiply({a:num1, b:num2}).then((response) => {
+      setResult(parseInt(response.response.result));
+    })
+  }
   return (
     <>
       <h1 className="text-6xl font-extrabold background bg-gradient-to-r from-red-300 to-blue-300 text-transparent bg-clip-text py-2">
@@ -50,6 +55,14 @@ function App() {
             className="rounded bg-indigo-500 px-2 py-2 text-3xl font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
           >
             Add
+          </button>
+
+          <button
+            type="button"
+            onClick={handleMultiply}
+            className="rounded bg-indigo-500 px-2 py-2 text-3xl font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+          >
+            Multiply
           </button>
         </div>
       </div>

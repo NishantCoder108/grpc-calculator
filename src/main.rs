@@ -139,13 +139,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     Server::builder()
         .accept_http1(true)
-        // .layer(tower_http::cors::CorsLayer::permissive())
-        // .layer(
-        //     CorsLayer::new()
-        //         .allow_origin(Any)
-        //         .allow_methods(Any)
-        //         .allow_headers(Any),
-        // )
         .layer(
             CorsLayer::new()
                 .allow_origin(HeaderValue::from_static("http://localhost:5173"))
@@ -154,7 +147,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         )
         .layer(GrpcWebLayer::new())
         .add_service(service)
-        // .add_service(tonic_web::enable(CalculatorServer::new(calc)))
         .add_service(CalculatorServer::new(calc))
         // .add_service(AdminServer::new(admin))
         .add_service(AdminServer::with_interceptor(admin, check_auth))

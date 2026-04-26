@@ -1,7 +1,12 @@
 use http::{HeaderName, HeaderValue, Method};
 use proto::admin_server::{Admin, AdminServer};
 use proto::calculator_server::{Calculator, CalculatorServer};
+use tonic::metadata::MetadataValue;
 use tonic::transport::Server;
+use tonic::{Request, Status};
+use tonic_web::GrpcWebLayer;
+use tower_http::cors::{Any, CorsLayer};
+
 mod proto {
     tonic::include_proto!("calculator");
 
@@ -108,11 +113,6 @@ impl Admin for AdminService {
     }
 }
 
-use tonic::metadata::MetadataValue;
-use tonic::{Request, Status};
-use tonic_web::GrpcWebLayer;
-use tower_http::cors::{Any, CorsLayer};
-
 fn check_auth(req: Request<()>) -> Result<Request<()>, Status> {
     let token: MetadataValue<_> = "Bearer some-secret-token".parse().unwrap();
 
@@ -121,6 +121,7 @@ fn check_auth(req: Request<()>) -> Result<Request<()>, Status> {
         _ => Err(Status::unauthenticated("no valid auth token")),
     }
 }
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let addr = "[::1]:50051".parse()?;
